@@ -276,10 +276,11 @@ const GameInterface = () => {
             >
               <h3 className="font-heading font-bold text-primary mb-3">Game Info</h3>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
+<div className="flex justify-between">
                   <span className="text-surface-600">Target Score:</span>
                   <span className="font-medium text-primary">{TARGET_SCORE}</span>
-<div className="flex justify-between">
+                </div>
+                <div className="flex justify-between">
                   <span className="text-surface-600">Turn:</span>
                   <span className="font-medium text-primary">{gameState?.turnNumber || 1}</span>
                 </div>
@@ -289,7 +290,6 @@ const GameInterface = () => {
                     Player {(gameState?.currentPlayer || 'player1') === 'player1' ? '1' : '2'}
                   </span>
                 </div>
-              </div>
               </div>
             </motion.div>
 
@@ -369,9 +369,10 @@ const GameInterface = () => {
                 </p>
                 
                 <div className="bg-surface-50 rounded-lg p-4 mb-6">
-                  <div className="flex justify-between text-lg font-medium">
+<div className="flex justify-between text-lg font-medium">
                     <span>Final Score:</span>
-<div className="flex justify-between mt-2">
+                  </div>
+                  <div className="flex justify-between mt-2">
                     <span className={winner === 'player1' ? 'text-accent font-bold' : 'text-surface-600'}>
                       Player 1: {gameState?.scores?.player1 || 0}
                     </span>
@@ -381,7 +382,6 @@ const GameInterface = () => {
                   </div>
                 </div>
                 
-                <button
                 <button
                   onClick={handleNewGame}
                   className="bg-primary text-surface-50 px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors text-lg"
