@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "currentPlayer": "player1",
+    "scores": {
+      "player1": 0,
+      "player2": 0
+    },
+    "turnNumber": 1,
+    "boardState": [],
+    "lastShot": null,
+    "gameWon": false,
+    "winner": null,
+    "createdAt": "2024-01-15T10:30:00.000Z"
+  }
+]

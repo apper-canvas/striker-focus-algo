@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "angle": 45,
+    "power": 0.8,
+    "timestamp": 1705312200000,
+    "result": "hit",
+    "player": "player1",
+    "coinsPocketed": [],
+    "strikerPocketed": false
+  },
+  {
+    "id": "2", 
+    "angle": 90,
+    "power": 0.6,
+    "timestamp": 1705312260000,
+    "result": "miss",
+    "player": "player2",
+    "coinsPocketed": [],
+    "strikerPocketed": false
+  },
+  {
+    "id": "3",
+    "angle": 30,
+    "power": 0.9,
+    "timestamp": 1705312320000,
+    "result": "pocket",
+    "player": "player1",
+    "coinsPocketed": ["w1"],
+    "strikerPocketed": false
+  }
+]
