@@ -237,15 +237,15 @@ const GameInterface = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-<div className="max-w-4xl mx-auto">
+<div className="min-h-screen bg-background p-4">
+      <div className="max-w-4xl mx-auto">
         {/* Header with Score Panel */}
         <div className="mb-6">
           <ScorePanel
-            player1Score={gameState?.scores?.player1 || 0}
-            player2Score={gameState?.scores?.player2 || 0}
-            currentPlayer={gameState?.currentPlayer || 'player1'}
-            turnNumber={gameState?.turnNumber || 1}
+            player1Score={gameState?.scores?.player1 ?? 0}
+            player2Score={gameState?.scores?.player2 ?? 0}
+            currentPlayer={gameState?.currentPlayer && (gameState.currentPlayer === 'player1' || gameState.currentPlayer === 'player2') ? gameState.currentPlayer : 'player1'}
+            turnNumber={gameState?.turnNumber && typeof gameState.turnNumber === 'number' && gameState.turnNumber > 0 ? gameState.turnNumber : 1}
           />
         </div>
         {/* Main Game Area */}
@@ -263,10 +263,13 @@ const GameInterface = () => {
             </GameErrorBoundary>
           </div>
 
-          {/* Side Panel */}
+{/* Side Panel */}
           <div className="w-full lg:w-64 space-y-4">
             {/* Power Meter */}
-            <PowerMeter power={power} isVisible={isAiming} />
+            <PowerMeter 
+              power={typeof power === 'number' && !isNaN(power) ? power : 0} 
+              isVisible={Boolean(isAiming)} 
+            />
 
             {/* Game Info */}
             <motion.div
@@ -280,14 +283,16 @@ const GameInterface = () => {
                   <span className="text-surface-600">Target Score:</span>
                   <span className="font-medium text-primary">{TARGET_SCORE}</span>
                 </div>
-                <div className="flex justify-between">
+<div className="flex justify-between">
                   <span className="text-surface-600">Turn:</span>
-                  <span className="font-medium text-primary">{gameState?.turnNumber || 1}</span>
+                  <span className="font-medium text-primary">
+                    {gameState?.turnNumber && typeof gameState.turnNumber === 'number' && gameState.turnNumber > 0 ? gameState.turnNumber : 1}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-surface-600">Current Player:</span>
                   <span className="font-medium text-accent">
-                    Player {(gameState?.currentPlayer || 'player1') === 'player1' ? '1' : '2'}
+                    Player {(gameState?.currentPlayer && (gameState.currentPlayer === 'player1' || gameState.currentPlayer === 'player2') ? gameState.currentPlayer : 'player1') === 'player1' ? '1' : '2'}
                   </span>
                 </div>
               </div>
@@ -372,12 +377,12 @@ const GameInterface = () => {
 <div className="flex justify-between text-lg font-medium">
                     <span>Final Score:</span>
                   </div>
-                  <div className="flex justify-between mt-2">
+<div className="flex justify-between mt-2">
                     <span className={winner === 'player1' ? 'text-accent font-bold' : 'text-surface-600'}>
-                      Player 1: {gameState?.scores?.player1 || 0}
+                      Player 1: {gameState?.scores?.player1 ?? 0}
                     </span>
                     <span className={winner === 'player2' ? 'text-accent font-bold' : 'text-surface-600'}>
-                      Player 2: {gameState?.scores?.player2 || 0}
+                      Player 2: {gameState?.scores?.player2 ?? 0}
                     </span>
                   </div>
                 </div>

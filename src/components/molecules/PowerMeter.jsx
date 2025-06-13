@@ -5,9 +5,16 @@ import Text from '@/components/atoms/Text';
 const PowerMeter = ({ power = 0, isVisible = false }) => {
   if (!isVisible) return null;
 
-  const powerPercentage = Math.min(Math.max(power * 100, 0), 100);
+  // Enhanced power validation
+  const safePower = typeof power === 'number' && !isNaN(power) ? power : 0;
+  const powerPercentage = Math.min(Math.max(safePower * 100, 0), 100);
   const powerColor = powerPercentage < 30 ? 'success' : powerPercentage < 70 ? 'warning' : 'error';
 
+  // Validate Text component color prop
+  const getValidTextColor = (color) => {
+    const validColors = ['default', 'muted', 'primary', 'secondary', 'accent', 'success', 'warning', 'error'];
+    return validColors.includes(color) ? color : 'primary';
+  };
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -36,7 +43,12 @@ const PowerMeter = ({ power = 0, isVisible = false }) => {
           />
         </div>
         
-        <Text variant="body" size="sm" weight="bold" color={powerColor}>
+<Text 
+          variant="body" 
+          size="sm" 
+          weight="bold" 
+          color={getValidTextColor(powerColor)}
+        >
           {Math.round(powerPercentage)}%
         </Text>
       </div>

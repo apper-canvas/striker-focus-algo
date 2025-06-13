@@ -9,16 +9,21 @@ const Text = ({
   className = '',
   ...props 
 }) => {
-  // Validate and sanitize props
-  const safeVariant = variant && typeof variant === 'string' ? variant : 'body';
-  const safeSize = size && typeof size === 'string' ? size : 'base';
-  const safeWeight = weight && typeof weight === 'string' ? weight : 'normal';
-  const safeColor = color && typeof color === 'string' ? color : 'default';
-  const safeClassName = className && typeof className === 'string' ? className : '';
+  // Enhanced validation and sanitization
+  const safeVariant = variant && typeof variant === 'string' && variant.trim() ? variant.trim() : 'body';
+  const safeSize = size && typeof size === 'string' && size.trim() ? size.trim() : 'base';
+  const safeWeight = weight && typeof weight === 'string' && weight.trim() ? weight.trim() : 'normal';
+  const safeColor = color && typeof color === 'string' && color.trim() ? color.trim() : 'default';
+  const safeClassName = className && typeof className === 'string' ? className.trim() : '';
   
-  // Handle children safely
-  const safeChildren = children != null ? children : '';
+  // Handle children safely with additional checks
+  const safeChildren = children !== null && children !== undefined ? children : '';
   
+  // Validate children is renderable
+  if (typeof safeChildren === 'object' && safeChildren !== null && !React.isValidElement(safeChildren)) {
+    console.warn('Text component received non-renderable object as children:', safeChildren);
+    return <span className="text-surface-50">Invalid content</span>;
+  }
   const variants = {
     display: 'font-heading',
     heading: 'font-heading',
@@ -61,19 +66,31 @@ const Text = ({
   const sizeClass = sizes[safeSize] || sizes.base;
   const weightClass = weights[safeWeight] || weights.normal;
   const colorClass = colors[safeColor] || colors.default;
+// Additional safety check for class composition
+  const finalClassName = [variantClass, sizeClass, weightClass, colorClass, safeClassName]
+    .filter(cls => cls && typeof cls === 'string')
+    .join(' ')
+    .trim();
 
   try {
     return (
       <span 
-        className={`${variantClass} ${sizeClass} ${weightClass} ${colorClass} ${safeClassName}`}
+        className={finalClassName || 'text-surface-50'}
         {...props}
       >
         {safeChildren}
       </span>
     );
   } catch (error) {
-    console.error('Text component error:', error);
-    return <span className="text-surface-50">{safeChildren}</span>;
+    console.error('Text component render error:', error, {
+      variant: safeVariant,
+      size: safeSize,
+      weight: safeWeight,
+      color: safeColor,
+      children: safeChildren
+    });
+    // Fallback with minimal styling
+    return <span className="text-surface-50">{String(safeChildren || '')}</span>;
   }
 };
 
