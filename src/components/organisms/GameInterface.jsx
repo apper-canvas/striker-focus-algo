@@ -7,6 +7,47 @@ import PowerMeter from '@/components/molecules/PowerMeter';
 import GameControls from '@/components/molecules/GameControls';
 import { gameStateService } from '@/services';
 
+// Error Boundary Component
+class GameErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Game component error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="h-screen flex items-center justify-center bg-background">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-surface-100/90 wood-texture rounded-lg border-2 border-primary/20 p-8 shadow-lg text-center max-w-md"
+          >
+            <h2 className="text-2xl font-heading font-bold text-error mb-4">Game Error</h2>
+            <p className="text-surface-700 mb-6">Something went wrong with the game board.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-primary text-surface-50 px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            >
+              Reload Game
+            </button>
+          </motion.div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const GameInterface = () => {
   const [gameState, setGameState] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -197,28 +238,29 @@ const GameInterface = () => {
 
   return (
     <div className="min-h-screen bg-background p-4">
-      <div className="max-w-4xl mx-auto">
+<div className="max-w-4xl mx-auto">
         {/* Header with Score Panel */}
         <div className="mb-6">
           <ScorePanel
-            player1Score={gameState.scores.player1}
-            player2Score={gameState.scores.player2}
-            currentPlayer={gameState.currentPlayer}
-            turnNumber={gameState.turnNumber}
+            player1Score={gameState?.scores?.player1 || 0}
+            player2Score={gameState?.scores?.player2 || 0}
+            currentPlayer={gameState?.currentPlayer || 'player1'}
+            turnNumber={gameState?.turnNumber || 1}
           />
         </div>
-
         {/* Main Game Area */}
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
+<div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Game Board */}
           <div className="flex-1 flex justify-center">
-            <CarromBoard
-              gameState={gameState}
-              onShot={handleShot}
-              onPowerChange={setPower}
-              onAimingChange={setIsAiming}
-              isPlayerTurn={!gameWon}
-            />
+            <GameErrorBoundary>
+              <CarromBoard
+                gameState={gameState}
+                onShot={handleShot}
+                onPowerChange={setPower}
+                onAimingChange={setIsAiming}
+                isPlayerTurn={!gameWon}
+              />
+            </GameErrorBoundary>
           </div>
 
           {/* Side Panel */}
@@ -237,17 +279,17 @@ const GameInterface = () => {
                 <div className="flex justify-between">
                   <span className="text-surface-600">Target Score:</span>
                   <span className="font-medium text-primary">{TARGET_SCORE}</span>
-                </div>
-                <div className="flex justify-between">
+<div className="flex justify-between">
                   <span className="text-surface-600">Turn:</span>
-                  <span className="font-medium text-primary">{gameState.turnNumber}</span>
+                  <span className="font-medium text-primary">{gameState?.turnNumber || 1}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-surface-600">Current Player:</span>
                   <span className="font-medium text-accent">
-                    Player {gameState.currentPlayer === 'player1' ? '1' : '2'}
+                    Player {(gameState?.currentPlayer || 'player1') === 'player1' ? '1' : '2'}
                   </span>
                 </div>
+              </div>
               </div>
             </motion.div>
 
@@ -329,17 +371,17 @@ const GameInterface = () => {
                 <div className="bg-surface-50 rounded-lg p-4 mb-6">
                   <div className="flex justify-between text-lg font-medium">
                     <span>Final Score:</span>
-                  </div>
-                  <div className="flex justify-between mt-2">
+<div className="flex justify-between mt-2">
                     <span className={winner === 'player1' ? 'text-accent font-bold' : 'text-surface-600'}>
-                      Player 1: {gameState.scores.player1}
+                      Player 1: {gameState?.scores?.player1 || 0}
                     </span>
                     <span className={winner === 'player2' ? 'text-accent font-bold' : 'text-surface-600'}>
-                      Player 2: {gameState.scores.player2}
+                      Player 2: {gameState?.scores?.player2 || 0}
                     </span>
                   </div>
                 </div>
                 
+                <button
                 <button
                   onClick={handleNewGame}
                   className="bg-primary text-surface-50 px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors text-lg"

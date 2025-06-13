@@ -8,37 +8,42 @@ const ScorePanel = ({
   currentPlayer = 'player1',
   turnNumber = 1
 }) => {
+  // Ensure safe values
+  const safePlayer1Score = typeof player1Score === 'number' ? player1Score : 0;
+  const safePlayer2Score = typeof player2Score === 'number' ? player2Score : 0;
+  const safeCurrentPlayer = currentPlayer === 'player1' || currentPlayer === 'player2' ? currentPlayer : 'player1';
+  const safeTurnNumber = typeof turnNumber === 'number' && turnNumber > 0 ? turnNumber : 1;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-surface-100/90 wood-texture rounded-lg border-2 border-primary/20 p-4 shadow-lg backdrop-blur-sm"
     >
-      <div className="flex items-center justify-between mb-2">
+<div className="flex items-center justify-between mb-2">
         <Text variant="heading" size="lg" weight="bold" color="primary">
           Striker Pro
         </Text>
         <Text variant="body" size="sm" color="muted">
-          Turn {turnNumber}
+          Turn {safeTurnNumber}
         </Text>
       </div>
-      
       <div className="grid grid-cols-2 gap-4">
-        <motion.div 
+<motion.div 
           className={`text-center p-3 rounded-lg border-2 transition-all duration-200 ${
-            currentPlayer === 'player1' 
+            safeCurrentPlayer === 'player1' 
               ? 'border-accent bg-accent/10 shadow-md' 
               : 'border-surface-300/50 bg-surface-50/50'
           }`}
-          animate={currentPlayer === 'player1' ? { scale: 1.05 } : { scale: 1 }}
+          animate={safeCurrentPlayer === 'player1' ? { scale: 1.05 } : { scale: 1 }}
         >
           <Text variant="body" size="sm" weight="medium" color="primary">
             Player 1
           </Text>
-          <Text variant="display" size="2xl" weight="bold" color={currentPlayer === 'player1' ? 'accent' : 'primary'}>
-            {player1Score}
+          <Text variant="display" size="2xl" weight="bold" color={safeCurrentPlayer === 'player1' ? 'accent' : 'primary'}>
+            {safePlayer1Score}
           </Text>
-          {currentPlayer === 'player1' && (
+          {safeCurrentPlayer === 'player1' && (
             <motion.div
               className="w-2 h-2 bg-accent rounded-full mx-auto mt-1"
               animate={{ scale: [1, 1.5, 1] }}
@@ -47,21 +52,21 @@ const ScorePanel = ({
           )}
         </motion.div>
 
-        <motion.div 
+<motion.div 
           className={`text-center p-3 rounded-lg border-2 transition-all duration-200 ${
-            currentPlayer === 'player2' 
+            safeCurrentPlayer === 'player2' 
               ? 'border-accent bg-accent/10 shadow-md' 
               : 'border-surface-300/50 bg-surface-50/50'
           }`}
-          animate={currentPlayer === 'player2' ? { scale: 1.05 } : { scale: 1 }}
+          animate={safeCurrentPlayer === 'player2' ? { scale: 1.05 } : { scale: 1 }}
         >
           <Text variant="body" size="sm" weight="medium" color="primary">
             Player 2
           </Text>
-          <Text variant="display" size="2xl" weight="bold" color={currentPlayer === 'player2' ? 'accent' : 'primary'}>
-            {player2Score}
+          <Text variant="display" size="2xl" weight="bold" color={safeCurrentPlayer === 'player2' ? 'accent' : 'primary'}>
+            {safePlayer2Score}
           </Text>
-          {currentPlayer === 'player2' && (
+          {safeCurrentPlayer === 'player2' && (
             <motion.div
               className="w-2 h-2 bg-accent rounded-full mx-auto mt-1"
               animate={{ scale: [1, 1.5, 1] }}
